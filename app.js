@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-03-23 20:01:21
- * @LastEditTime: 2019-08-28 00:31:01
+ * @LastEditTime: 2019-08-29 18:28:42
  * @LastEditors: Please set LastEditors
  */
 var createError = require('http-errors');
@@ -45,7 +45,6 @@ app.post('/login', function (req, res) {
     loginFun.login(req,res);
 })
 
-
 app.get('/isLogin', function (req, res) {
     var sessionId = req.headers['sessionid'];
 
@@ -60,8 +59,17 @@ app.get('/isLogin', function (req, res) {
             })
         }
     })
+})
 
+app.get('/getUseTime',function(req,res){
+    var sessionId = req.headers['sessionid'];
 
+    redisStore.getOpenid(sessionId,function (openid) {
+        userDao.getUseTime(openid,function(result){
+            res.json(result);
+        })
+        
+    })
 })
 
 app.post('/compiler', function (req, res) {

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-26 11:26:05
- * @LastEditTime: 2019-08-27 23:31:11
+ * @LastEditTime: 2019-08-29 18:14:11
  * @LastEditors: Please set LastEditors
  */
 var mysql = require('mysql');
@@ -68,6 +68,15 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             var cmd = 'select useTime,' + params.type + ' from user where openid=\"' + params.openid + '\";';
             connection.query(cmd,function (err, result) {
+                connection.release();
+                callback(result);
+            })
+        })
+    },
+    getUseTime:function(openid,callback){
+        pool.getConnection(function(err,connection){
+            var cmd = "select useTime,C,Cpp,java,python2,python3 from user where openid=\'"+openid+"\';" ;
+            connection.query(cmd,function(err,result){
                 connection.release();
                 callback(result);
             })

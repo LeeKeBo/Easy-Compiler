@@ -42,7 +42,7 @@ node_modules/
 jspm_packages/
 
 #
-ssl/
+.ssl/
 
 # TypeScript v1 declaration files
 typings/
