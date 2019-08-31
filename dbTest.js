@@ -2,17 +2,17 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-26 18:16:25
- * @LastEditTime: 2019-08-27 17:23:11
+ * @LastEditTime: 2019-08-30 09:58:48
  * @LastEditors: Please set LastEditors
  */
 var mysql = require('mysql');
 
 var pool = mysql.createPool({
-    host:'127.0.0.1',
-    user:'root',
-    password:'toor',
-    database:'compiler',
-    port:3306
+    host: '127.0.0.1',
+    user: 'root',
+    password: 'toor',
+    database: 'compiler',
+    port: 3306
 });
 
 var insertCmd = "insert into user(openid,useTime) values(?,?);"
@@ -48,16 +48,33 @@ openid = "jiu"
 //     })
 // })
 
-var updateCmd = "update user set useTime=? where openid = ?;";
-pool.getConnection(function(err,connection){
-    connection.query(updateCmd,[1,openid],function(err,result){
-        console.log(err)
-        console.log(result.changedRows)
-       // console.log(result['RowDataPacket'])
+// var updateCmd = "update user set useTime=? where openid = ?;";
+// pool.getConnection(function (err, connection) {
+//     connection.query(updateCmd, [1, openid], function (err, result) {
+//         console.log(err)
+//         console.log(result.changedRows)
+//         // console.log(result['RowDataPacket'])
+//         connection.release();
+//     })
+// })
+
+pool.getConnection(function (err, connection) {
+    // console.log($sql.user)
+    var openid = "jiumi";
+    var addCmd = "insert into user(openid, useTime,C,Cpp,java,python2,python3) values(\'" +
+        openid + "\'," + "0,0,0,0,0,0);";
+    console.log(addCmd)
+
+    connection.query(addCmd, function (err, result) {
+        console.log(result);
+        if (result) {
+            console.log("jiumi")
+            result = {
+                code: 200,
+                msg: '增加成功'
+            };
+        }
         connection.release();
+        // callback(result)
     })
-})
-
-
-
-
+});

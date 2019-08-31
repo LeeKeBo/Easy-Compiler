@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-08-26 11:26:05
- * @LastEditTime: 2019-08-29 18:14:11
+ * @LastEditTime: 2019-08-30 10:16:18
  * @LastEditors: Please set LastEditors
  */
 var mysql = require('mysql');
@@ -32,10 +32,10 @@ module.exports = {
     add: function (openid, callback) {
         pool.getConnection(function (err, connection) {
             // console.log($sql.user)
-            connection.query($sql.user.insert, [openid, 0], function (err, result) {
-                console.log(result);
+            var addCmd = "insert into user(openid, useTime,C,Cpp,java,python2,python3) values(\'"
+            +openid+"\',"+"0,0,0,0,0,0);"
+            connection.query(addCmd, function (err, result) {
                 if (result) {
-                    console.log("jiumi")
                     result = {
                         code: 200,
                         msg: '增加成功'
