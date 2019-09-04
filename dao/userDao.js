@@ -21,9 +21,9 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             // console.log($sql.user)
             var addCmd = "insert into user(openid, useTime,C,Cpp,java,python2,python3) values(\'"
-            +openid+"\',"+"0,0,0,0,0,0);"
+                + openid + "\'," + "0,0,0,0,0,0);"
             connection.query(addCmd, function (err, result) {
-                if(err){
+                if (err) {
                     callback(null)
                 }
                 if (result) {
@@ -41,7 +41,7 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             connection.query($sql.user.queryByOpenid, [openid], function (err, result) {
                 // console.log(result)
-                if(err){
+                if (err) {
                     callback(null)
                 }
                 connection.release();
@@ -51,9 +51,9 @@ module.exports = {
     },
     update: function (params, callback) {
         pool.getConnection(function (err, connection) {
-            var cmd = 'update user set useTime='+params.newUseTime+','+params.type+'='+params.newNum+' where openid=\"'+params.openid+'\";';
+            var cmd = 'update user set useTime=' + params.newUseTime + ',' + params.type + '=' + params.newNum + ' where openid=\"' + params.openid + '\";';
             connection.query(cmd, function (err, result) {
-                if(err){
+                if (err) {
                     callback(null)
                 }
                 connection.release();
@@ -64,8 +64,8 @@ module.exports = {
     findTypeByOpenid: function (params, callback) {
         pool.getConnection(function (err, connection) {
             var cmd = 'select useTime,' + params.type + ' from user where openid=\"' + params.openid + '\";';
-            connection.query(cmd,function (err, result) {
-                if(err){
+            connection.query(cmd, function (err, result) {
+                if (err) {
                     callback(null)
                 }
                 connection.release();
@@ -73,11 +73,51 @@ module.exports = {
             })
         })
     },
-    getUseTime:function(openid,callback){
-        pool.getConnection(function(err,connection){
-            var cmd = "select useTime,C,Cpp,java,python2,python3 from user where openid=\'"+openid+"\';" ;
-            connection.query(cmd,function(err,result){
-                if(err){
+    getUseTime: function (openid, callback) {
+        pool.getConnection(function (err, connection) {
+            var cmd = "select useTime,C,Cpp,java,python2,python3 from user where openid=\'" + openid + "\';";
+            connection.query(cmd, function (err, result) {
+                if (err) {
+                    callback(null)
+                }
+                connection.release();
+                callback(result);
+            })
+        })
+    },
+    storeUserInfo: function (openid, username, callback) {
+        pool.getConnection(function (err, connection) {
+            var insertCmd = "insert into userinfo(openid,username) value(\'" + openid + "\',\'" + username + "\');";
+            connection.query(insertCmd, function (err, result) {
+                if (err) {
+                    console.log(err)
+                    callback(null)
+                } else {
+                    connection.release();
+                    callback(result)
+                }
+            })
+        })
+    },
+    findUserInfo: function (openid, callback) {
+        pool.getConnection(function (err, connection) {
+            var cmd = "select username from userinfo where openid=\'" + openid + "\';";
+            connection.query(cmd, function (err, result) {
+                if (err) {
+                    console.log(err)
+                    callback(null)
+                }
+                connection.release();
+                callback(result);
+            })
+        })
+    },
+    updateUserInfo: function (openid, username, callback) {
+        pool.getConnection(function (err, connection) {
+            var cmd = "update userinfo set username=\'" + username + "\' where openid=\'" + openid + "\';";
+            connection.query(cmd, function (err, result) {
+                if (err) {
+                    console.log(err)
                     callback(null)
                 }
                 connection.release();

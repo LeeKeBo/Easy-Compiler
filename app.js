@@ -45,16 +45,22 @@ app.get('/', function (req, res) {
 })
 
 app.post('/login', function (req, res) {
-    loginFun.login(req,res);
+    loginFun.login(req, res);
 })
 
-app.get('/getFileList',function(req,res){
-    getFile.getFileList(req,res);
+app.post('/storeUserName', function (req, res) {
+    loginFun.userinfoOp(req, res);
 })
 
-app.get('/getFile',function(req,res){
-    getFile.getFile(req,res);
+app.get('/getFileList', function (req, res) {
+    getFile.getFileList(req, res);
 })
+
+app.get('/getFile', function (req, res) {
+    getFile.getFile(req, res);
+})
+
+
 
 app.get('/isLogin', function (req, res) {
     var sessionId = req.headers['sessionid'];
@@ -72,19 +78,19 @@ app.get('/isLogin', function (req, res) {
     })
 })
 
-app.get('/getUseTime',function(req,res){
+app.get('/getUseTime', function (req, res) {
     var sessionId = req.headers['sessionid'];
 
-    redisStore.getOpenid(sessionId,function (openid) {
-        userDao.getUseTime(openid,function(result){
+    redisStore.getOpenid(sessionId, function (openid) {
+        userDao.getUseTime(openid, function (result) {
             res.json(result);
         })
-        
+
     })
 })
 
 app.post('/compiler', function (req, res) {
-    execCompiler.run(req,res);    
+    execCompiler.run(req, res);
 })
 
 app.use('/', indexRouter);

@@ -62,3 +62,26 @@ exports.login = function(req,res){
 
     })
 }
+
+exports.userinfoOp = function(req,res){
+    var sessionId = req.body.sessionId,username = req.body.username;
+
+    redisStore.getOpenid(sessionId,function(openid){
+        if(openid == null){
+            res.status(404).send("登录过期");
+        }else{
+            userDao.findUserInfo(openid,function(result){
+                if (JSON.stringify(result) == "[]") {
+                    userDao.storeUserInfo(openid,username,function(result){
+                       res.send(result)
+                    })
+                }else{
+                    userDao.updateUserInfo(openid,username,function(result){
+                        res.send(result)
+                    })
+                }
+            })
+        }
+    })
+    
+}

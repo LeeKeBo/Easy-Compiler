@@ -30,7 +30,7 @@ exports.isLogin = function (sessionId,callback) {
             console.log(err.message);
             callback(-1)
         } else if(value){
-            client.expire(sessionId,600)
+            client.expire(sessionId,1200)
             callback(1)
         }else{
             callback(-1)
