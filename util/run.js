@@ -8,21 +8,24 @@
 var compiler = require('../compileFun/compiler');
 var redisStore = require('../dao/redisFun');
 var userDao = require('../dao/userDao');
+var fileDao = require('../dao/fileDao')
+var moment = require('moment')
 
 var option = {
     stats: true
 };
 compiler.init(option);
 
-exports.run = function(req,res){
+exports.run = function (req, res) {
     var code = req.body.code; //code
     var input = req.body.input; //input
     var inputRadio = req.body.inputRadio; //hasInput?
     var type = req.body.type; //type
     var sessionId = req.headers['sessionid']
+    var filename = Math.random().toString(36).slice(-8);//生成随机名
     // console.log(sessionId)
-    redisStore.getOpenid(sessionId, function (value) {
-        if (value == null) {
+    redisStore.getOpenid(sessionId, function (openid) {
+        if (openid == null) {
             res.send("请尝试重新登录");
         } else {
             var tempType = type;
@@ -30,26 +33,37 @@ exports.run = function(req,res){
                 tempType = "Cpp";
             userDao.findTypeByOpenid({
                 type: tempType,
-                openid: value
+                openid: openid
             }, function (result) {
-                userDao.update({
-                    newUseTime: ++result[0].useTime,
-                    type: tempType,
-                    newNum: ++result[0][type],
-                    openid: value
-                }, function (result) {
-                    if (result.changedRows == 1) {
-                        console.log("yes");
-                    }
-                })
+                if(result[0]){
+                    userDao.update({
+                        newUseTime: ++result[0].useTime,
+                        type: tempType,
+                        newNum: ++result[0][tempType],
+                        openid: openid
+                    }, function (result) {
+                        if (result.changedRows == 1) {
+                            console.log("yes");
+                        }
+                    })
+                }
             })
 
-            if (inputRadio) {
+            var data = moment(new Date()).format('YYYY-MM-DD HH:mm:ss').toString()
+            fileDao.addFile({
+                time: data,
+                filename: filename,
+                openid: openid,
+                type: tempType,
+                className:req.body.className
+            }, function (result) {})
 
+            if (inputRadio) {
                 var envData = {
                     option: {
                         timeout: 4000,
                         className: req.body.className,
+                        fileName: filename
                     }
                 };
                 if (type === 'C' || type === 'C++') {
@@ -100,6 +114,7 @@ exports.run = function(req,res){
                     option: {
                         timeout: 3000,
                         className: req.body.className,
+                        fileName: filename
                     }
                 };
                 if (type === 'C' || type === 'C++') {

@@ -14,7 +14,8 @@ exports.stats = false;
 
 exports.compileCpp = function (envData, code, fn) {
     // var fileName = cuid.slug();
-    var fileName = Math.random().toString(36).slice(-8);
+    // var fileName = Math.random().toString(36).slice(-8);
+    var fileName = envData.option.fileName;
     path = './tempC/';
 
     fs.writeFile(path + fileName + '.cpp', code, function (err) {
@@ -93,7 +94,7 @@ exports.compileCpp = function (envData, code, fn) {
 
 exports.compileCppWithInput = function (envData, code, input, fn) {
     // var fileName = cuid.slug();
-    var fileName = Math.random().toString(36).slice(-8);
+    var fileName = envData.option.fileName;
     path = './tempC/';
     fs.writeFile(path + fileName + '.cpp', code, function (err) { //write the file
         if (err) //err

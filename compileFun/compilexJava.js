@@ -15,7 +15,7 @@ exports.stats = false;
 
 exports.compileJava = function (envData, code, fn) {
     // var fileName = cuid.slug();
-    var fileName = Math.random().toString(36).slice(-8);
+    var fileName = envData.option.fileName;
     var className = envData.option.className;
     var path = "./tempJava/" + fileName;
     var javaFile = className + '.java';
@@ -84,7 +84,7 @@ exports.compileJava = function (envData, code, fn) {
 
 exports.compileJavaWithInput = function (envData, code, input, fn) {
     // var fileName = cuid.slug();
-    var fileName = Math.random().toString(36).slice(-8);
+    var fileName = envData.option.fileName;
     var className = envData.option.className;
     var path = "./tempJava/" + fileName;
     var javaFile = className + '.java';

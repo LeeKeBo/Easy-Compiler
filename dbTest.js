@@ -15,8 +15,8 @@ var pool = mysql.createPool({
     port: 3306
 });
 
-var insertCmd = "insert into user(openid,useTime) values(?,?);"
-var openid = "9"
+// var insertCmd = "insert into user(openid,useTime) values(?,?);"
+// var openid = "9"
 
 // pool.getConnection(function (err, connection) {
 //    if(err){
@@ -38,15 +38,21 @@ var openid = "9"
 //     connection.release();
 //    }
 // });
-openid = "jiu"
-// var findCmd = "select * from user where openid=? limit 1;";
-// pool.getConnection(function(err,connection){
-//     connection.query(findCmd,[openid],function(err,result){
-//         console.log(result[0]['openid'])
-//        // console.log(result['RowDataPacket'])
-//         connection.release();
-//     })
-// })
+openid = "jiumi1"
+var findCmd = "select time from c where openid=\'"+openid+"\';";
+pool.getConnection(function(err,connection){
+    connection.query(findCmd,function(err,result){
+        console.log(result)
+        var resultList = []
+        for(var i = 0;i<result.length;i++){
+            resultList.push(result[i].time);
+        }
+        console.log(typeof(resultList));
+        
+       // console.log(result['RowDataPacket'])
+        connection.release();
+    })
+})
 
 // var updateCmd = "update user set useTime=? where openid = ?;";
 // pool.getConnection(function (err, connection) {
@@ -58,23 +64,34 @@ openid = "jiu"
 //     })
 // })
 
-pool.getConnection(function (err, connection) {
-    // console.log($sql.user)
-    var openid = "jiumi";
-    var addCmd = "insert into user(openid, useTime,C,Cpp,java,python2,python3) values(\'" +
-        openid + "\'," + "0,0,0,0,0,0);";
-    console.log(addCmd)
+// pool.getConnection(function (err, connection) {
+//     // console.log($sql.user)
+//     var openid = "jiumi1", time = "1904923", path = "fds/fs";
+//     for (var i = 0; i < 10; i++) {
+//         var addCmd = "insert into c(openid, time,path) values(\'" +
+//             openid  + "\',\'" + time + i + "\',\'" + path + i + "\');";
 
-    connection.query(addCmd, function (err, result) {
-        console.log(result);
-        if (result) {
-            console.log("jiumi")
-            result = {
-                code: 200,
-                msg: '增加成功'
-            };
-        }
-        connection.release();
-        // callback(result)
-    })
-});
+//         console.log(addCmd)
+
+//         connection.query(addCmd, function (err, result) {
+//             console.log(result);
+//             if (result) {
+//                 console.log("jiumi")
+//                 result = {
+//                     code: 200,
+//                     msg: '增加成功'
+//                 };
+//             }
+//             // callback(result)
+//         })
+//     }
+//     connection.release();
+        
+// });
+
+// var date = Date.now();
+// console.log(date);
+
+// moment = require('moment')
+
+// console.log(moment(new Date()).format('YYYY-MM-DD HH:mm:ss').toString())

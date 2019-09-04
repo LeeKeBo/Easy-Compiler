@@ -16,11 +16,14 @@ var userDao = require('./dao/userDao')
 var redisStore = require('./dao/redisFun')
 var execCompiler = require('./util/run')
 var loginFun = require('./util/login');
+var getFile = require('./util/getFile')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ', err);
+});
 
 var app = express();
 app.use(bodyParser());
@@ -43,6 +46,14 @@ app.get('/', function (req, res) {
 
 app.post('/login', function (req, res) {
     loginFun.login(req,res);
+})
+
+app.get('/getFileList',function(req,res){
+    getFile.getFileList(req,res);
+})
+
+app.get('/getFile',function(req,res){
+    getFile.getFile(req,res);
 })
 
 app.get('/isLogin', function (req, res) {

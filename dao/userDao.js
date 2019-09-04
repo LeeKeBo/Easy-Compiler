@@ -15,18 +15,6 @@ var pool = mysql.createPool($conf.mysql);
 // console.log($conf);
 
 
-var jsonWrite = function (res, ret) {
-    if (typeof ret === 'undefined') {
-        res.json({
-            code: '1',
-            msg: '操作失败'
-        });
-    } else {
-        res.json(ret);
-    }
-};
-
-
 
 module.exports = {
     add: function (openid, callback) {
@@ -35,6 +23,9 @@ module.exports = {
             var addCmd = "insert into user(openid, useTime,C,Cpp,java,python2,python3) values(\'"
             +openid+"\',"+"0,0,0,0,0,0);"
             connection.query(addCmd, function (err, result) {
+                if(err){
+                    callback(null)
+                }
                 if (result) {
                     result = {
                         code: 200,
@@ -50,6 +41,9 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             connection.query($sql.user.queryByOpenid, [openid], function (err, result) {
                 // console.log(result)
+                if(err){
+                    callback(null)
+                }
                 connection.release();
                 callback(result);
             })
@@ -59,6 +53,9 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             var cmd = 'update user set useTime='+params.newUseTime+','+params.type+'='+params.newNum+' where openid=\"'+params.openid+'\";';
             connection.query(cmd, function (err, result) {
+                if(err){
+                    callback(null)
+                }
                 connection.release();
                 callback(result);
             })
@@ -68,6 +65,9 @@ module.exports = {
         pool.getConnection(function (err, connection) {
             var cmd = 'select useTime,' + params.type + ' from user where openid=\"' + params.openid + '\";';
             connection.query(cmd,function (err, result) {
+                if(err){
+                    callback(null)
+                }
                 connection.release();
                 callback(result);
             })
@@ -77,6 +77,9 @@ module.exports = {
         pool.getConnection(function(err,connection){
             var cmd = "select useTime,C,Cpp,java,python2,python3 from user where openid=\'"+openid+"\';" ;
             connection.query(cmd,function(err,result){
+                if(err){
+                    callback(null)
+                }
                 connection.release();
                 callback(result);
             })
