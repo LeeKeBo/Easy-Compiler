@@ -61,7 +61,7 @@ exports.run = function (req, res) {
             if (inputRadio) {
                 var envData = {
                     option: {
-                        timeout: 4000,
+                        timeout: 5000,
                         className: req.body.className,
                         fileName: filename
                     }
@@ -112,7 +112,7 @@ exports.run = function (req, res) {
             } else {
                 var envData = {
                     option: {
-                        timeout: 3000,
+                        timeout: 4000,
                         className: req.body.className,
                         fileName: filename
                     }
@@ -127,7 +127,6 @@ exports.run = function (req, res) {
                         } else {
                             res.send(data.output);
                         }
-                        return;
                     });
                 } else if (type === 'java') {
                     compiler.compileJava(envData, code, function (data) {
@@ -138,7 +137,6 @@ exports.run = function (req, res) {
                         } else {
                             res.send(data.output);
                         }
-                        return;
                     })
                 } else if (type === 'python2') {
                     compiler.compilePy2(envData, code, function (data) {
@@ -149,7 +147,6 @@ exports.run = function (req, res) {
                         } else {
                             res.send(data.output);
                         }
-                        return;
                     })
                 } else if (type === 'python3') {
                     compiler.compilePy3(envData, code, function (data) {
@@ -160,7 +157,6 @@ exports.run = function (req, res) {
                         } else {
                             res.send(data.output);
                         }
-                        return;
                     })
                 } else {
                     res.send("暂不支持");

@@ -24,6 +24,7 @@ module.exports = {
                     + params.time + "\',\'" + path + "\',\'" + params.type + "\');";
                 connection.query(addCmd, function (err, result) {
                     if (err) {
+                        connection.release();
                         console.log(err);
                         callback(false)
                     }
@@ -37,6 +38,7 @@ module.exports = {
     findFileList: function (openid, type, callback) {
         pool.getConnection(function (err, connection) {
             if (err) {
+                connection.release();
                 callback(null)
             }
             else {
@@ -58,6 +60,7 @@ module.exports = {
                 var findCmd = "select time,type from file where openid=\'" + openid + "\';"
                 connection.query(findCmd, function (err, result) {
                     if(err){
+                        connection.release();
                         callback(null)
                     }
                     connection.release();
@@ -69,6 +72,7 @@ module.exports = {
     findFilePath: function (openid, type, time, callback) {
         pool.getConnection(function (err, connection) {
             if (err) {
+                connection.release();
                 callback(null)
             }
             else {
@@ -84,6 +88,7 @@ module.exports = {
     clearFile:function(openid,callback){
         pool.getConnection(function(err,connection){
             if(err){
+                connection.release();
                 callback(null)
             }else{
                 var cleanCmd = "delete from file where openid=\'"+openid+"\';";

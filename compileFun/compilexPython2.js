@@ -21,10 +21,10 @@ exports.compilePython2 = function (envData, code, fn) {
         if (exports.stats) {
             if (err) {
                 console.log("INFO: ".red + err);
-                // var out = {
-                //     error: "write file error!".red
-                // };
-                // fn(out);
+                var out = {
+                    error: "write file error!".red
+                };
+                fn(out);
             } else {
                 var progNotFinished = true;
                 var out = {};

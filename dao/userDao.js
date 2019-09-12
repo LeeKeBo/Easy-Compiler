@@ -24,6 +24,7 @@ module.exports = {
                 + openid + "\'," + "0,0,0,0,0,0);"
             connection.query(addCmd, function (err, result) {
                 if (err) {
+                    connection.release();
                     callback(null)
                 }
                 if (result) {
@@ -42,6 +43,7 @@ module.exports = {
             connection.query($sql.user.queryByOpenid, [openid], function (err, result) {
                 // console.log(result)
                 if (err) {
+                    connection.release();
                     callback(null)
                 }
                 connection.release();
@@ -54,6 +56,7 @@ module.exports = {
             var cmd = 'update user set useTime=' + params.newUseTime + ',' + params.type + '=' + params.newNum + ' where openid=\"' + params.openid + '\";';
             connection.query(cmd, function (err, result) {
                 if (err) {
+                    connection.release();
                     callback(null)
                 }
                 connection.release();
@@ -78,6 +81,7 @@ module.exports = {
             var cmd = "select useTime,C,Cpp,java,python2,python3 from user where openid=\'" + openid + "\';";
             connection.query(cmd, function (err, result) {
                 if (err) {
+                    connection.release();
                     callback(null)
                 }
                 connection.release();
@@ -90,6 +94,7 @@ module.exports = {
             var insertCmd = "insert into userinfo(openid,username) value(\'" + openid + "\',\'" + username + "\');";
             connection.query(insertCmd, function (err, result) {
                 if (err) {
+                    connection.release();
                     console.log(err)
                     callback(null)
                 } else {
@@ -104,6 +109,7 @@ module.exports = {
             var cmd = "select username from userinfo where openid=\'" + openid + "\';";
             connection.query(cmd, function (err, result) {
                 if (err) {
+                    connection.release();
                     console.log(err)
                     callback(null)
                 }
@@ -117,6 +123,7 @@ module.exports = {
             var cmd = "update userinfo set username=\'" + username + "\' where openid=\'" + openid + "\';";
             connection.query(cmd, function (err, result) {
                 if (err) {
+                    connection.release();
                     console.log(err)
                     callback(null)
                 }

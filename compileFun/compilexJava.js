@@ -27,6 +27,10 @@ exports.compileJava = function (envData, code, fn) {
         if (exports.stats) {
             if (err) {
                 console.log('INFO: '.green + 'write file error'.red); //error
+                var out = {
+                    error: "write file error!".red
+                };
+                fn(out);
             } else {
                 console.log('INFO:'.green + ' create ' + javaFile + ' successfully');
                 var command = 'javac ' + path + '/' + javaFile;
@@ -96,6 +100,10 @@ exports.compileJavaWithInput = function (envData, code, input, fn) {
         if (exports.stats) {
             if (err) {
                 console.log('INFO: '.green + 'write file error'.red); //error
+                var out = {
+                    error: "write file error!".red
+                };
+                fn(out);
             } else {
                 console.log('INFO:'.green + ' create ' + javaFile + ' successfully');
                 var command = 'javac ' + path + '/' + javaFile;
