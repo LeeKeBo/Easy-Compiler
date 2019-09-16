@@ -20,10 +20,10 @@ exports.compileCpp = function (envData, code, fn) {
 
     fs.writeFile(path + fileName + '.cpp', code, function (err) {
         if (exports.stats) {
-            if (err){
+            if (err) {
                 console.log('ERROR'.red + err)
                 var out = {
-                    error:err
+                    error: err
                 }
                 fn(out)
             }
@@ -41,46 +41,72 @@ exports.compileCpp = function (envData, code, fn) {
                         };
                         fn(out);
                     } else {
-                        var progNotFinished = true;
-                        var out = {};
-                        var cPro = exec(path + fileName + '.out', function (error, stdout, stderr) { //执行.out文件
-                            if (error) { //error
-                                if (error.toString().indexOf('Error: stdout maxBuffer exceeded.') != -1) {
-                                    out.error = 'Error: stdout maxBuffer exceeded. You might have initialized an infinite loop.'
-                                    progNotFinished = false;
-                                    fn(out);
-                                } else {
-                                    if (exports.stats) {
-                                        console.log('INFO: '.green + fileName + '.cpp contained an error while executing');
-                                    }
-                                    out.error = stderr || "Time limited";
-                                    progNotFinished = false;
-                                    fn(out);
+
+                        var valPro = exec("valgrind " + path + fileName + ".out", function (error, stdout, stderr) {
+                            if (error) {
+                                var out = {
+                                    error: erorr
                                 }
-                            } else { //successfully
-                                if (exports.stats) {
-                                    console.log('INFO: '.green + fileName + '.cpp successfully compiled and executed !');
-                                }
-                                out.output = stdout;
-                                progNotFinished = false;
                                 fn(out);
                             }
-
-                        }) //exec the fileName.out
-                        if (envData.option.timeout) { //kill the time limited file
-                            timeCommand = "kill -s 9 " + cPro.pid;
-                            setTimeout(function () {
-                                exec(timeCommand, function (error, stdout, stderr) {
-                                    if (progNotFinished) {
-                                        progNotFinished = false; // programme finished
-                                        if (exports.stats) {
-                                            console.log('INFO: '.green + fileName + '.out was killed after ' + envData.option.timeout + 'ms');
+                            else if (!stderr.match("All heap blocks were freed -- no leaks are possible")) {
+                                var out = {
+                                    error: "分配空间未完全释放，请检查代码"
+                            }
+                                fn(out);
+                            }
+                            else {
+                                var progNotFinished = true;
+                                var out = {};
+                                var cPro = exec(path + fileName + '.out', function (error, stdout, stderr) { //执行.out文件
+                                    if (error) { //error
+                                        if (error.toString().indexOf('Error: stdout maxBuffer exceeded.') != -1) {
+                                            out.error = 'Error: stdout maxBuffer exceeded. You might have initialized an infinite loop.'
+                                            progNotFinished = false;
+                                            fn(out);
+                                        } else {
+                                            if (exports.stats) {
+                                                console.log('INFO: '.green + fileName + '.cpp contained an error while executing');
+                                            }
+                                            out.error = stderr || "Time limited";
+                                            progNotFinished = false;
+                                            fn(out);
                                         }
-                                        out.timeout = true;
+                                    } else { //successfully
+                                        if (exports.stats) {
+                                            console.log('INFO: '.green + fileName + '.cpp successfully compiled and executed !');
+                                        }
+                                        out.output = stdout;
+                                        progNotFinished = false;
+                                        fn(out);
                                     }
-                                }) // exec
-                            }, envData.option.timeout) //setTimeout
-                        }
+
+                                }) //exec the fileName.out
+                                if (envData.option.timeout) { //kill the time limited file
+                                    timeCommand = "kill -s 9 " + cPro.pid;
+                                    setTimeout(function () {
+                                        exec(timeCommand, function (error, stdout, stderr) {
+                                            if (progNotFinished) {
+                                                progNotFinished = false; // programme finished
+                                                if (exports.stats) {
+                                                    console.log('INFO: '.green + fileName + '.out was killed after ' + envData.option.timeout + 'ms');
+                                                }
+                                                out.timeout = true;
+                                            }
+                                        }) // exec
+                                    }, envData.option.timeout) //setTimeout
+                                }
+                            }
+                        })
+
+                        setTimeout(function(){
+                            exec("kill -s 9" +valPro.pid,function(error,stdout,stderr){
+                                console.log(valPro.pid)
+                                var out = {
+                                    timeout: true
+                                }
+                            })
+                        },3000);
                     }
 
                 }) //exec the compiler command.red
@@ -112,79 +138,91 @@ exports.compileCppWithInput = function (envData, code, input, fn) {
                     };
                     fn(out);
                 } else {
-                    if (input) { //has input
-                        var inputfile = fileName + 'input.txt';
-                        progNotFinished = true;
-                        var out = {};
-                        
-                        // fs.writeFile(path + inputfile, input, function (err) {
-                        //     if (exports.stats) {
-                        //         if (err) {
-                        //             console.log('ERROR: '.red + err);
-                        //             out.error = "write file error(the server error)";
-                        //             progNotFinished = false;
-                        //             fn(out);
 
-                        //         } else {
-                        //             console.log('INFO: '.green + inputfile + ' (inputfile) created');
-                        //             out.error = "error";
-                        //             progNotFinished = false;
-                        //             fn(out);
-                        //         }
-                        //     }
-                        // });
-                        fs.writeFileSync(path+inputfile,input);
+                    var inputfile = fileName + 'input.txt';
+                    if(input){
+                        fs.writeFileSync(path + inputfile, input);
+                    }
 
-                        var cPro = exec(path + fileName + '.out' + ' < ' + path + inputfile, function (error, stdout, stderr) { //exec the .out file
-                            if (error) { //error
-                                if (error.toString().indexOf('Error: stdout maxBuffer exceeded.') != -1) {
-                                    out.error = 'Error: stdout maxBuffer exceeded. You might have initialized an infinite loop.'
-                                    progNotFinished = false;
-                                    fn(out);
-                                } else {
-                                    if (exports.stats) {
-                                        console.log('INFO: '.green + fileName + '.cpp contained an error while executing');
+                    var valPro = exec("valgrind " + path + fileName + ".out"+ ' < ' + path + inputfile, function (error, stdout, stderr) {
+                        if (error) {
+                            var out = {
+                                error: erorr
+                            }
+                            fn(out);
+                        }
+                        else if (!stderr.match("All heap blocks were freed -- no leaks are possible")) {
+                            var out = {
+                                error: "分配空间未完全释放，请检查代码"
+                            }
+                            fn(out);
+                        }
+                        else {
+                            if (input) { //has input
+                                progNotFinished = true;
+                                var out = {};
+
+                               
+                                var cPro = exec(path + fileName + '.out' + ' < ' + path + inputfile, function (error, stdout, stderr) { //exec the .out file
+                                    if (error) { //error
+                                        if (error.toString().indexOf('Error: stdout maxBuffer exceeded.') != -1) {
+                                            out.error = 'Error: stdout maxBuffer exceeded. You might have initialized an infinite loop.'
+                                            progNotFinished = false;
+                                            fn(out);
+                                        } else {
+                                            if (exports.stats) {
+                                                console.log('INFO: '.green + fileName + '.cpp contained an error while executing');
+                                            }
+                                            out.error = stderr || "Time limited";
+                                            progNotFinished = false;
+                                            fn(out);
+                                        }
+                                    } else { //successfully
+                                        if (exports.stats) {
+                                            console.log('INFO: '.green + fileName + '.cpp successfully compiled and executed !');
+                                        }
+                                        out.output = stdout;
+                                        progNotFinished = false;
+                                        fn(out);
                                     }
-                                    out.error = stderr || "Time limited";
-                                    progNotFinished = false;
-                                    fn(out);
+                                })
+
+                                if (envData.option.timeout) { //kill the time limited file
+                                    timeCommand = "kill -s 9 " + cPro.pid;
+                                    setTimeout(function () {
+                                        exec(timeCommand, function (error, stdout, stderr) {
+                                            if (progNotFinished) {
+                                                progNotFinished = false;
+                                                if (exports.stats) {
+                                                    console.log('INFO: '.green + fileName + '.out was killed after ' + envData.option.timeout + 'ms');
+                                                }
+                                                out.timeout = true;
+                                            }
+                                        }) // exec
+                                    }, envData.option.timeout) //setTimeout
                                 }
-                            } else { //successfully
+
+                            } else //no input file
+                            {
                                 if (exports.stats) {
-                                    console.log('INFO: '.green + fileName + '.cpp successfully compiled and executed !');
+                                    console.log('INFO: '.green + 'Input mission for ' + fileName + '.cpp');
                                 }
-                                out.output = stdout;
-                                progNotFinished = false;
+                                var out = {
+                                    error: 'Input Missing'
+                                };
                                 fn(out);
+                                progNotFinished = false;
+                            }
+                        }
+                    });
+                    setTimeout(function(){
+                        exec("kill -s 9" +valPro.pid,function(error,stdout,stderr){
+                            console.log(valPro.pid)
+                            var out = {
+                                timeout: true
                             }
                         })
-
-                        if (envData.option.timeout) { //kill the time limited file
-                            timeCommand = "kill -s 9 " + cPro.pid;
-                            setTimeout(function () {
-                                exec(timeCommand, function (error, stdout, stderr) {
-                                    if (progNotFinished) {
-                                        progNotFinished = false;
-                                        if (exports.stats) {
-                                            console.log('INFO: '.green + fileName + '.out was killed after ' + envData.option.timeout + 'ms');
-                                        }
-                                        out.timeout = true;
-                                    }
-                                }) // exec
-                            }, envData.option.timeout) //setTimeout
-                        }
-
-                    } else //no input file
-                    {
-                        if (exports.stats) {
-                            console.log('INFO: '.green + 'Input mission for ' + fileName + '.cpp');
-                        }
-                        var out = {
-                            error: 'Input Missing'
-                        };
-                        fn(out);
-                        progNotFinished = false;
-                    }
+                    },3000);
                 }
             })
         }
