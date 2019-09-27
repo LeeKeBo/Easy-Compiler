@@ -61,8 +61,6 @@ exports.getFile = function (req, res) {
                         } else if (type == "python3") {
                             pickerIndex = 4;
                         }
-
-
                         res.json({
                             code: data.toString(),
                             type: type,

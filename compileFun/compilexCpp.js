@@ -105,6 +105,7 @@ exports.compileCpp = function (envData, code, fn) {
                                 var out = {
                                     timeout: true
                                 }
+                                fn(out);
                             })
                         },3000);
                     }
@@ -221,6 +222,7 @@ exports.compileCppWithInput = function (envData, code, input, fn) {
                             var out = {
                                 timeout: true
                             }
+                            fn(out);
                         })
                     },3000);
                 }

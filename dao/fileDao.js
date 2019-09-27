@@ -14,14 +14,13 @@ module.exports = {
                 if (params.type == 'C' || params.type == 'Cpp')
                     path = "tempC/" + params.filename + ".cpp";
                 else if (params.type == 'java')
-                    path = "tempJava/" + params.filename + "/"+params.className+".java";
+                    path = "tempJava/" + params.filename + "/" + params.className + ".java";
                 else if (params.type == 'python2')
                     path = "tempPy2/" + params.filename + ".py";
                 else if (params.type == 'python3')
                     path = "tempPy3/" + params.filename + ".py";
-
-                var addCmd = "insert into file (openid,time,path,type) value(\'" + params.openid + "\',\'"
-                    + params.time + "\',\'" + path + "\',\'" + params.type + "\');";
+                var addCmd = "insert into file (openid,time,path,type,filename) value(\'" + params.openid + "\',\'"
+                    + params.time + "\',\'" + path + "\',\'" + params.type + "\',\'" + params.filename + "\');";
                 connection.query(addCmd, function (err, result) {
                     if (err) {
                         connection.release();
@@ -42,7 +41,7 @@ module.exports = {
                 callback(null)
             }
             else {
-                var findCmd = "select time,type from file where openid=\'" + openid + "\' and type=\'"
+                var findCmd = "select time,type,filename from file where openid=\'" + openid + "\' and type=\'"
                     + type + "\';"
                 connection.query(findCmd, function (err, result) {
                     connection.release();
@@ -57,9 +56,9 @@ module.exports = {
                 callback(null)
             }
             else {
-                var findCmd = "select time,type from file where openid=\'" + openid + "\';"
+                var findCmd = "select time,type,filename from file where openid=\'" + openid + "\';"
                 connection.query(findCmd, function (err, result) {
-                    if(err){
+                    if (err) {
                         connection.release();
                         callback(null)
                     }
@@ -85,14 +84,14 @@ module.exports = {
             }
         })
     },
-    clearFile:function(openid,callback){
-        pool.getConnection(function(err,connection){
-            if(err){
+    clearFile: function (openid, callback) {
+        pool.getConnection(function (err, connection) {
+            if (err) {
                 connection.release();
                 callback(null)
-            }else{
-                var cleanCmd = "delete from file where openid=\'"+openid+"\';";
-                connection.query(cleanCmd,function(err,result){
+            } else {
+                var cleanCmd = "delete from file where openid=\'" + openid + "\';";
+                connection.query(cleanCmd, function (err, result) {
                     connection.release();
                     callback(result)
                 })

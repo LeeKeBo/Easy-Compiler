@@ -21,6 +21,7 @@ exports.run = function (req, res) {
     var input = req.body.input; //input
     var inputRadio = req.body.inputRadio; //hasInput?
     var type = req.body.type; //type
+    var fileNameByUser = req.body.filename;
     var sessionId = req.headers['sessionid']
     var filename = Math.random().toString(36).slice(-8);//生成随机名
     // console.log(sessionId)
@@ -48,14 +49,15 @@ exports.run = function (req, res) {
                     })
                 }
             })
-
+            fileNameByUser = fileNameByUser.length == 0 ?'hello file':fileNameByUser;
             var data = moment(new Date()).format('YYYY-MM-DD HH:mm:ss').toString()
             fileDao.addFile({
                 time: data,
                 filename: filename,
                 openid: openid,
                 type: tempType,
-                className:req.body.className
+                className:req.body.className,
+                filename:fileNameByUser
             }, function (result) {})
 
             if (inputRadio) {
