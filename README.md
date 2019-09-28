@@ -22,8 +22,40 @@
      + create the database compiler
         + `create database compiler`
         + `use compiler`
-        + create the tables like below
-        ![db](./public/db.png)
+        + create the tables like below:
+        
+user table:
+
+| Field | Type | Null | Key | Default | Extra |
+| :---: | :--: | :--: | :-: | :-----: | :---: |
+| openid | varchar(30) | NO |  | NULL |  |
+| useTime | int(11) | NO |  | NULL |  | 
+| C | int(11) | NO |  | 0 |  | 
+| Cpp | int(11) | NO |  | 0 |  | 
+| java | int(11) | NO |  | 0 |  | 
+| python2 | int(11) | NO |  | 0 |  | 
+| python3 | int(11) | NO |  | 0 |  | 
+
+userinfo table:
+
+| Field | Type | Null | Key | Default | Extra |
+| :---: | :--: | :--: | :-: | :-----: | :---: |
+| openid | varchar(30) | NO |  | NULL |  |
+| username | varchar(50) | YES |  | NULL |  |
+
+file table:
+
+| Field | Type | Null | Key | Default | Extra |
+| :---: | :--: | :--: | :-: | :-----: | :---: |
+| id | int(11) | NO | PRI | NULL | auto_increment|
+| openid | varchar(30) | NO |  | NULL |  |
+| time | varchar(20) | NO |  | NULL |  |
+| path | varchar(128) | NO |  | NULL |  |
+| type | varchar(8) | NO |  | NULL |  |
+| filename | varchar(30) | YES |  | hello file |  |
+
+
+
 
 + run:
    + `npm start` 

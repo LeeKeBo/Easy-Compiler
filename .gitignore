@@ -32,7 +32,7 @@ coverage
 bower_components
 
 #dbFile
-conf/
+conf/db.js
 
 # node-waf configuration
 .lock-wscript
