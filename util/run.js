@@ -65,7 +65,7 @@ exports.run = function (req, res) {
                     option: {
                         timeout: 5000,
                         className: req.body.className,
-                        fileName: filename
+                        fileNameByUser: filename
                     }
                 };
                 if (type === 'C' || type === 'C++') {
