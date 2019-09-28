@@ -5,8 +5,6 @@
  * @LastEditTime: 2019-08-26 22:52:33
  * @LastEditors: Please set LastEditors
  */
-var cuid = require('cuid');
-var colors = require('colors');
 var fs = require('fs');
 var exec = require('child_process').exec;
 // var spawn = require('child_process')

@@ -6,9 +6,7 @@
  * @LastEditors: Please set LastEditors
  */
 var exec = require('child_process').exec;
-var cuid = require('cuid');
 var fs = require('fs');
-var color = require('colors');
 
 exports.stats = false;
 

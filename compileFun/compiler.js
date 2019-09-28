@@ -9,10 +9,7 @@ var cppModule = require('./compilexCpp');
 var javaModule = require('./compilexJava');
 var py2Module = require('./compilexPython2');
 var py3Module = require('./compilexPython3')
-var exec = require('child_process').exec;
 var fs = require('fs');
-var cuid = require('cuid');
-var color = require('colors');
 
 exports.stats = false;
 
