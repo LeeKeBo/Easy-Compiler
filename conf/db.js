@@ -12,5 +12,8 @@ module.exports = {
         password:'toor',
         database:'compiler',
         port:3306
+    },
+    fd:{
+        
     }
 }
