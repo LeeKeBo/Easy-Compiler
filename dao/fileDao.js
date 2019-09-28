@@ -20,7 +20,7 @@ module.exports = {
                 else if (params.type == 'python3')
                     path = "tempPy3/" + params.filename + ".py";
                 var addCmd = "insert into file (openid,time,path,type,filename) value(\'" + params.openid + "\',\'"
-                    + params.time + "\',\'" + path + "\',\'" + params.type + "\',\'" + params.filename + "\');";
+                    + params.time + "\',\'" + path + "\',\'" + params.type + "\',\'" + params.fileNameByUser + "\');";
                 connection.query(addCmd, function (err, result) {
                     if (err) {
                         connection.release();
