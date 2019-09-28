@@ -57,7 +57,7 @@ exports.run = function (req, res) {
                 openid: openid,
                 type: tempType,
                 className:req.body.className,
-                fileNameByUser:fileNameByUser
+                filename:fileNameByUser
             }, function (result) {})
 
             if (inputRadio) {
