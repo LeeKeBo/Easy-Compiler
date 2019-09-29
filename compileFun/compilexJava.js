@@ -7,6 +7,7 @@
  */
 var fs = require('fs');
 var exec = require('child_process').exec;
+var colors = require('colors')
 // var spawn = require('child_process')
 
 exports.stats = false;

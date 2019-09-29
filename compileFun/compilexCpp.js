@@ -7,6 +7,7 @@
  */
 var exec = require('child_process').exec;
 var fs = require('fs');
+var colors = require('colors')
 
 exports.stats = false;
 
@@ -39,7 +40,8 @@ exports.compileCpp = function (envData, code, fn) {
                         };
                         fn(out);
                     } else {
-
+                        var progNotFinished = true;
+                                
                         var valPro = exec("valgrind " + path + fileName + ".out", function (error, stdout, stderr) {
                             if (error) {
                                 var out = {
@@ -54,7 +56,6 @@ exports.compileCpp = function (envData, code, fn) {
                                 fn(out);
                             }
                             else {
-                                var progNotFinished = true;
                                 var out = {};
                                 var cPro = exec(path + fileName + '.out', function (error, stdout, stderr) { //执行.out文件
                                     if (error) { //error
@@ -98,13 +99,15 @@ exports.compileCpp = function (envData, code, fn) {
                         })
 
                         setTimeout(function(){
-                            exec("kill -s 9" +valPro.pid,function(error,stdout,stderr){
-                                console.log(valPro.pid)
-                                var out = {
-                                    timeout: true
-                                }
-                                fn(out);
-                            })
+                            if(progNotFinished){
+                                exec("kill -s 9" +valPro.pid,function(error,stdout,stderr){
+                                    console.log(valPro.pid)
+                                    var out = {
+                                        timeout: true
+                                    }
+                                    fn(out);
+                                })
+                            }
                         },3000);
                     }
 
@@ -137,7 +140,7 @@ exports.compileCppWithInput = function (envData, code, input, fn) {
                     };
                     fn(out);
                 } else {
-
+                    var progNotFinished = true;
                     var inputfile = fileName + 'input.txt';
                     if(input){
                         fs.writeFileSync(path + inputfile, input);
@@ -158,7 +161,6 @@ exports.compileCppWithInput = function (envData, code, input, fn) {
                         }
                         else {
                             if (input) { //has input
-                                progNotFinished = true;
                                 var out = {};
 
                                
@@ -215,13 +217,15 @@ exports.compileCppWithInput = function (envData, code, input, fn) {
                         }
                     });
                     setTimeout(function(){
-                        exec("kill -s 9" +valPro.pid,function(error,stdout,stderr){
-                            console.log(valPro.pid)
-                            var out = {
-                                timeout: true
-                            }
-                            fn(out);
-                        })
+                        if(progNotFinished){
+                            exec("kill -s 9" +valPro.pid,function(error,stdout,stderr){
+                                console.log(valPro.pid)
+                                var out = {
+                                    timeout: true
+                                }
+                                fn(out);
+                            })
+                        }
                     },3000);
                 }
             })

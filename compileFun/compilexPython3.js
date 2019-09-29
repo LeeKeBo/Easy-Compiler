@@ -7,6 +7,7 @@
  */
 var exec = require('child_process').exec;
 var fs = require('fs');
+var colors = require('colors')
 
 exports.stats = false;
 

@@ -6,6 +6,7 @@
  * @LastEditors: your name
  */
 var cppModule = require('./compilexCpp');
+var colors = require('colors')
 var javaModule = require('./compilexJava');
 var py2Module = require('./compilexPython2');
 var py3Module = require('./compilexPython3')

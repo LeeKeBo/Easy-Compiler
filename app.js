@@ -40,10 +40,6 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
-})
-
 app.post('/login', function (req, res) {
     loginFun.login(req, res);
 })

@@ -49,7 +49,10 @@ exports.run = function (req, res) {
                     })
                 }
             })
-            fileNameByUser = fileNameByUser.length == 0 ?'hello file':fileNameByUser;
+            if(fileNameByUser == undefined)
+                fileNameByUser = 'hello file'
+            else
+                fileNameByUser = fileNameByUser.length == 0 ?'hello file':fileNameByUser;
             var data = moment(new Date()).format('YYYY-MM-DD HH:mm:ss').toString()
             fileDao.addFile({
                 time: data,
@@ -57,7 +60,7 @@ exports.run = function (req, res) {
                 openid: openid,
                 type: tempType,
                 className:req.body.className,
-                filename:fileNameByUser
+                fileNameByUser:fileNameByUser
             }, function (result) {})
 
             if (inputRadio) {
@@ -65,7 +68,7 @@ exports.run = function (req, res) {
                     option: {
                         timeout: 5000,
                         className: req.body.className,
-                        fileNameByUser: filename
+                        fileName: filename
                     }
                 };
                 if (type === 'C' || type === 'C++') {
